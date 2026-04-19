@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Areas — Michael J. Bernstein</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1c1a17;
+      --ink-light: #4a4540;
+      --ink-faint: #8a857d;
+      --sage: #6b7d6a;
+      --sage-light: #8fa08e;
+      --sage-pale: #e6ebe5;
+      --rule: #d4cfc8;
+      --max-width: 680px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 2rem;
+    }
+
+    nav .nav-inner {
+      max-width: calc(var(--max-width) + 8rem);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      gap: 2rem;
+    }
+
+    .nav-home {
+      display: flex;
+      align-items: center;
+      color: var(--sage);
+      text-decoration: none;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .nav-home:hover { color: var(--ink); }
+
+    .nav-home svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--sage); }
+
+    /* ---- HAMBURGER ---- */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+      color: var(--ink-light);
+      transition: color 0.2s;
+    }
+
+    .nav-hamburger:hover { color: var(--sage); }
+
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+      transform-origin: center;
+    }
+
+    /* animated X state */
+    nav.open .nav-hamburger span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    nav.open .nav-hamburger span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    nav.open .nav-hamburger span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* mobile drawer */
+    .nav-drawer {
+      display: none;
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background: rgba(245, 240, 232, 0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 1rem 2rem 1.5rem;
+      z-index: 99;
+    }
+
+    nav.open .nav-drawer {
+      display: block;
+      animation: drawerFade 0.2s ease forwards;
+    }
+
+    @keyframes drawerFade {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-drawer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav-drawer ul li a {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.2s;
+    }
+
+    .nav-drawer ul li:last-child a {
+      border-bottom: none;
+    }
+
+    .nav-drawer ul li a:hover,
+    .nav-drawer ul li a.active { color: var(--sage); }
+
+    @media (max-width: 680px) {
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; }
+    }
+
+    /* ---- MAIN LAYOUT ---- */
+    main { padding-top: 56px; }
+
+    .container {
+      max-width: calc(var(--max-width) + 8rem);
+      margin: 0 auto;
+      padding: 0 4rem;
+    }
+
+    /* ---- PAGE HEADER ---- */
+    .page-header {
+      padding: 4.5rem 0 3rem;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.9s ease 0.15s forwards;
+    }
+
+    .page-header h1 {
+      font-family: 'Lora', serif;
+      font-size: 2.4rem;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .page-intro {
+      margin-top: 1.75rem;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+      max-width: var(--max-width);
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-rule {
+      text-align: center;
+      padding: 1rem 0;
+      color: var(--sage-light);
+      font-size: 0.5rem;
+      letter-spacing: 1.4em;
+      user-select: none;
+    }
+
+    /* ---- SECTION LABEL ---- */
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.75rem;
+    }
+
+    /* ---- THEMATIC AREAS ---- */
+    .thematic-section {
+      padding: 3.5rem 0 2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .thematic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .theme-card {
+      background: var(--cream);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .theme-card-number {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .theme-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .theme-card-desc {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .theme-card-works {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .theme-card-works-label {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.1rem;
+    }
+
+    .theme-work-link {
+      font-size: 0.82rem;
+      color: var(--sage);
+      text-decoration: none;
+      border-bottom: 1px solid var(--sage-light);
+      line-height: 1.45;
+      transition: color 0.2s, border-color 0.2s;
+      display: inline;
+    }
+
+    .theme-work-link:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .theme-work-item {
+      font-size: 0.82rem;
+      color: var(--ink-faint);
+      line-height: 1.45;
+    }
+
+    /* ---- METHODS SECTION ---- */
+    .methods-section {
+      padding: 2rem 0 3.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.65s forwards;
+    }
+
+    .methods-label-row {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .methods-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      white-space: nowrap;
+    }
+
+    .methods-label-line {
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--sage-light);
+      border: 1px solid var(--sage-light);
+    }
+
+    .method-card {
+      background: var(--sage-pale);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .method-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .method-card-desc {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .method-card-works {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--sage-light);
+    }
+
+    .method-card-works-label {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.1rem;
+    }
+
+    /* ---- ORCID CALLOUT ---- */
+    .orcid-section {
+      padding: 3rem 0 4rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.85s forwards;
+    }
+
+    .orcid-text {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.75;
+      max-width: var(--max-width);
+    }
+
+    .orcid-text a {
+      color: var(--sage);
+      text-decoration: none;
+      border-bottom: 1px solid var(--sage-light);
+      font-style: normal;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .orcid-text a:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 1.5rem 0;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.03em;
+    }
+
+    /* ---- ANIMATION ---- */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 780px) {
+      .thematic-grid {
+        grid-template-columns: 1fr;
+      }
+      .methods-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .container { padding: 0 1.5rem; }
+      .page-header { padding: 3.5rem 0 2.5rem; }
+      .page-header h1 { font-size: 1.9rem; }
+    }
+
+    /* ---- DARK MODE ---- */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cream: #1e1b18;
+        --ink: #ede8e0;
+        --ink-light: #c2bbb0;
+        --ink-faint: #7a7268;
+        --sage: #8fa08e;
+        --sage-light: #6b7d6a;
+        --sage-pale: #252220;
+        --rule: #38332e;
+      }
+
+      nav { background: rgba(30, 27, 24, 0.92); }
+      .nav-drawer { background: rgba(30, 27, 24, 0.97); }
+
+      .method-card {
+        background: #252220;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-home" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12c2.5-3 5.5-4.5 10-4.5s7.5 1.5 10 4.5"/>
+        <path d="M2 12c2.5 3 5.5 4.5 10 4.5s7.5-1.5 10-4.5"/>
+        <line x1="12" y1="2" x2="12" y2="22"/>
+        <path d="M4.5 5.5C6.5 7 9 8 12 8s5.5-1 7.5-2.5"/>
+        <path d="M4.5 18.5C6.5 17 9 16 12 16s5.5 1 7.5 2.5"/>
+      </svg>
+    </a>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html" class="active">Focus Areas</a></li>
+      <li><a href="/capacity.html">Capacity Building</a></li>
+      <li><a href="/leadership.html">Leadership</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-drawer" id="nav-drawer">
+      <ul>
+
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html" class="active">Focus Areas</a></li>
+      <li><a href="/capacity.html">Capacity Building</a></li>
+      <li><a href="/leadership.html">Leadership</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Focus Areas</h1>
+      <p class="page-subtitle">Themes &amp; methods</p>
+      <p class="page-intro">Research and innovation systems — the policies, funding programs, and institutions that determine what gets studied, by whom, and for whose benefit — shape nearly every major challenge societies face. For fifteen years, I have worked to make those systems more just, more democratic, and more environmentally responsible. My research spans governance, leadership, and engagement: how to design innovation systems for the public good, how to build the capacity to work on hard sustainability problems, and how to involve people and communities in the decisions that affect them most.</p>
+    </div>
+  </section>
+
+  <div class="section-rule">&bull;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&bull;</div>
+
+  <!-- THEMATIC AREAS -->
+  <section class="thematic-section">
+    <div class="container">
+      <p class="section-label">Thematic areas</p>
+      <div class="thematic-grid">
+
+        <!-- THEME 1 -->
+        <div class="theme-card">
+          <span class="theme-card-number">01</span>
+          <h3>Designing innovation systems for public benefit</h3>
+          <p class="theme-card-desc">Research and innovation systems — the policies, institutions, and funding programs that shape what gets studied and by whom — are not neutral. This work asks how they can be redesigned to better serve people and planet: to distribute benefits more equitably, to avoid or account for harms, and to remain genuinely accountable to the societies that fund them.</p>
+          <div class="theme-card-works">
+            <span class="theme-card-works-label">Representative works</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1177/03063127231205043" class="theme-work-link" target="_blank" rel="noopener">Governing beyond the project</a> — <em>Social Studies of Science</em>, 2024</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/s13280-022-01802-3" class="theme-work-link" target="_blank" rel="noopener">The Green Deal as an opportunity to rethink R&amp;I policy</a> — <em>Ambio</em>, 2023</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/s11948-021-00360-3" class="theme-work-link" target="_blank" rel="noopener">The Societal Readiness Thinking Tool</a> — <em>Science and Engineering Ethics</em>, 2022</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1126/science.abb3415" class="theme-work-link" target="_blank" rel="noopener">Improve alignment of research policy and societal values</a> — <em>Science</em>, 2020</span>
+          </div>
+        </div>
+
+        <!-- THEME 2 -->
+        <div class="theme-card">
+          <span class="theme-card-number">02</span>
+          <h3>Building capacity to work on sustainability challenges</h3>
+          <p class="theme-card-desc">Sustainability transformations require people who can work across disciplines and sectors, hold complexity, and lead with both rigor and care. This work develops and tests frameworks for the competences, leadership qualities, and collective practices that enable researchers, practitioners, and institutions to be genuinely effective on hard problems.</p>
+          <div class="theme-card-works">
+            <span class="theme-card-works-label">Representative works</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1016/j.cosust.2025.101525" class="theme-work-link" target="_blank" rel="noopener">Growing through transformation pains</a> — <em>Current Opinion in Environmental Sustainability</em>, 2025</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/s13280-024-02086-5" class="theme-work-link" target="_blank" rel="noopener">Centering values in food systems research</a> — <em>AMBIO</em>, 2024</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/s11625-021-00909-y" class="theme-work-link" target="_blank" rel="noopener">Creating leadership collectives for sustainability transformations</a> — <em>Sustainability Science</em>, 2021</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/978-94-017-7242-6" class="theme-work-link" target="_blank" rel="noopener">Operationalising competencies in higher education for sustainable development</a> — Routledge, 2016</span>
+          </div>
+        </div>
+
+        <!-- THEME 3 -->
+        <div class="theme-card">
+          <span class="theme-card-number">03</span>
+          <h3>Engaging people to shape research and policy</h3>
+          <p class="theme-card-desc">Important decisions about technology, environment, and public investment are too often made without the people most affected by them. This work designs and studies processes — social labs, participatory forums, stakeholder panels — that give communities, practitioners, and publics genuine influence over the research and governance decisions that shape their lives.</p>
+          <div class="theme-card-works">
+            <span class="theme-card-works-label">Representative works</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1093/scipol/scad065" class="theme-work-link" target="_blank" rel="noopener">Organizing temporary participatory experiments</a> — <em>Science and Public Policy</em>, 2024</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1016/j.erss.2021.102473" class="theme-work-link" target="_blank" rel="noopener">Consent-based siting and nuclear waste management</a> — <em>Energy Research &amp; Social Science</em>, 2022</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1080/23299460.2022.2119003" class="theme-work-link" target="_blank" rel="noopener">The social lab as a method for experimental engagement</a> — <em>Journal of Responsible Innovation</em>, 2022</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODS SECTION -->
+  <section class="methods-section">
+    <div class="container">
+      <div class="methods-label-row">
+        <span class="methods-label">Methodological approaches</span>
+        <span class="methods-label-line"></span>
+      </div>
+      <div class="methods-grid">
+
+        <!-- METHOD 1 -->
+        <div class="method-card">
+          <h3>Futures thinking</h3>
+          <p class="method-card-desc">Scenarios, foresight exercises, and horizon-scanning help institutions and communities imagine futures that aren't simply extensions of the present — and plan more deliberately toward the ones they want. This work develops and applies futures methods in policy, corporate, and research settings, with particular attention to how futures thinking can inform governance of emerging technologies.</p>
+          <div class="method-card-works">
+            <span class="method-card-works-label">Representative works</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1016/j.futures.2021.102830" class="theme-work-link" target="_blank" rel="noopener">The future of aging in smart environments: four scenarios for 2050</a> — <em>Futures</em>, 2021</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.5281/zenodo.6219995" class="theme-work-link" target="_blank" rel="noopener">Scenario guide: KAITEKI Social Value Toolkit</a> — Zenodo, 2022</span>
+            <span class="theme-work-item"><a href="https://data.europa.eu/doi/10.2777/100029" class="theme-work-link" target="_blank" rel="noopener">S&amp;T&amp;I for 2050: science, technology and innovation for ecosystem performance</a> — European Commission, 2023</span>
+          </div>
+        </div>
+
+        <!-- METHOD 2 -->
+        <div class="method-card">
+          <h3>Participatory and experimental methods</h3>
+          <p class="method-card-desc">Research that sets out to change something — rather than just describe it — requires methods built for collaboration, iteration, and real-world context. This work develops and evaluates participatory approaches including social labs, serious games, co-design workshops, and capacity-building programs that generate knowledge by working alongside the people and institutions involved.</p>
+          <div class="method-card-works">
+            <span class="method-card-works-label">Representative works</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.3389/frsc.2022.837578" class="theme-work-link" target="_blank" rel="noopener">AudaCITY: a capacity-building research method for urban sustainability transformation</a> — <em>Frontiers in Sustainable Cities</em>, 2022</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1007/s11948-025-00568-7" class="theme-work-link" target="_blank" rel="noopener">Societal Readiness Thinking Process 2.0</a> — <em>Science and Engineering Ethics</em>, 2025</span>
+            <span class="theme-work-item"><a href="https://doi.org/10.1057/s41599-026-06645-x" class="theme-work-link" target="_blank" rel="noopener">Ethical playgrounds: a serious game for technological ethics</a> — <em>Humanities &amp; Social Sciences Communications</em>, 2026</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule">&bull;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&bull;</div>
+
+  <!-- ORCID CALLOUT -->
+  <section class="orcid-section">
+    <div class="container">
+      <p class="orcid-text">For a complete list of publications, please visit <a href="https://orcid.org/0000-0001-7980-0489" target="_blank" rel="noopener">ORCID</a> — the open registry that uniquely identifies researchers and connects them to their work across institutions and over time.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <span class="footer-note">michaeljbernstein.info</span>
+  </div>
+</footer>
+
+
+<script>
+  (function () {
+    var nav = document.querySelector('nav');
+    var btn = document.querySelector('.nav-hamburger');
+    if (!btn) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', nav.classList.contains('open'));
+    });
+
+    // close on drawer link click
+    var drawerLinks = document.querySelectorAll('.nav-drawer a');
+    drawerLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // close on outside click
+    document.addEventListener('click', function () {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  })();
+</script>
+
+</body>
+</html>

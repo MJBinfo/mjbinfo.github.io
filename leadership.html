@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leadership &amp; Advisory — Michael J. Bernstein</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="Leadership_files/css2.css" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1c1a17;
+      --ink-light: #4a4540;
+      --ink-faint: #8a857d;
+      --sage: #6b7d6a;
+      --sage-light: #8fa08e;
+      --sage-pale: #e6ebe5;
+      --rule: #d4cfc8;
+      --max-width: 680px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 2rem;
+    }
+
+    nav .nav-inner {
+      max-width: calc(var(--max-width) + 8rem);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      gap: 2rem;
+    }
+
+    .nav-home {
+      display: flex;
+      align-items: center;
+      color: var(--sage);
+      text-decoration: none;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .nav-home:hover { color: var(--ink); }
+
+    .nav-home svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--sage); }
+
+    /* ---- HAMBURGER ---- */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+      color: var(--ink-light);
+      transition: color 0.2s;
+    }
+
+    .nav-hamburger:hover { color: var(--sage); }
+
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+      transform-origin: center;
+    }
+
+    /* animated X state */
+    nav.open .nav-hamburger span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    nav.open .nav-hamburger span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    nav.open .nav-hamburger span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* mobile drawer */
+    .nav-drawer {
+      display: none;
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background: rgba(245, 240, 232, 0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 1rem 2rem 1.5rem;
+      z-index: 99;
+    }
+
+    nav.open .nav-drawer {
+      display: block;
+      animation: drawerFade 0.2s ease forwards;
+    }
+
+    @keyframes drawerFade {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-drawer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav-drawer ul li a {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.2s;
+    }
+
+    .nav-drawer ul li:last-child a {
+      border-bottom: none;
+    }
+
+    .nav-drawer ul li a:hover,
+    .nav-drawer ul li a.active { color: var(--sage); }
+
+    @media (max-width: 680px) {
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; }
+    }
+
+    /* ---- MAIN LAYOUT ---- */
+    main { padding-top: 56px; }
+
+    .container {
+      max-width: calc(var(--max-width) + 8rem);
+      margin: 0 auto;
+      padding: 0 4rem;
+    }
+
+    /* ---- PAGE HEADER ---- */
+    .page-header {
+      padding: 4.5rem 0 3rem;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.9s ease 0.15s forwards;
+    }
+
+    .page-header h1 {
+      font-family: 'Lora', serif;
+      font-size: 2.4rem;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .page-intro {
+      margin-top: 1.75rem;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+      max-width: var(--max-width);
+    }
+
+    .page-intro p + p {
+      margin-top: 1em;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-rule {
+      text-align: center;
+      padding: 1rem 0;
+      color: var(--sage-light);
+      font-size: 0.5rem;
+      letter-spacing: 1.4em;
+      user-select: none;
+    }
+
+    /* ---- SECTION LABEL ---- */
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.75rem;
+    }
+
+    /* ---- PRACTICE AREAS GRID ---- */
+    .practice-section {
+      padding: 3.5rem 0 2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .practice-card-wide {
+      grid-column: 1 / -1;
+      background: var(--cream);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .practice-card-wide .practice-card-desc {
+      max-width: 680px;
+    }
+
+    .practice-card-wide .practice-card-desc p + p {
+      margin-top: 0.9em;
+    }
+
+    .practice-card {
+      background: var(--cream);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .practice-card-number {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .practice-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .practice-card-desc {
+      font-size: 0.9rem;
+      color: var(--ink-light);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .practice-card-examples {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .practice-card-examples-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.5rem;
+    }
+
+    .practice-example {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      line-height: 1.55;
+      padding: 0.2rem 0;
+    }
+
+    .practice-example + .practice-example {
+      border-top: 1px solid var(--rule);
+      padding-top: 0.4rem;
+      margin-top: 0.2rem;
+    }
+
+    /* ---- SCALE STATS ---- */
+    .scale-section {
+      padding: 3.5rem 0 2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.55s forwards;
+    }
+
+    .scale-body {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+      max-width: var(--max-width);
+      margin-bottom: 2rem;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 2.5rem;
+      max-width: var(--max-width);
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-block {
+      flex: 1;
+      border-top: 2px solid var(--sage-light);
+      padding-top: 1rem;
+    }
+
+    .stat-number {
+      font-family: 'Lora', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      line-height: 1.4;
+    }
+
+    /* ---- RECORD SECTION (timeline-style) ---- */
+    .record-section {
+      padding: 3.5rem 0 2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.8s ease 0.65s forwards;
+    }
+
+    .record-list {
+      list-style: none;
+      max-width: var(--max-width);
+    }
+
+    .record-item {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 1.25rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .record-item:first-child {
+      border-top: 1px solid var(--rule);
+    }
+
+    .record-date {
+      font-size: 0.78rem;
+      color: var(--ink-faint);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      padding-top: 0.15rem;
+      line-height: 1.5;
+    }
+
+    .record-text {
+      font-size: 0.95rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+    }
+
+    .record-text strong {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .record-text em {
+      color: var(--ink-faint);
+      font-style: normal;
+      font-size: 0.88em;
+    }
+
+    .record-text a {
+      color: var(--sage);
+      text-decoration: none;
+    }
+
+    .record-text a:hover {
+      color: var(--ink);
+    }
+
+    /* ---- CONTACT CALLOUT ---- */
+    .contact-section {
+      padding: 3.5rem 0;
+    }
+
+    .contact-inner {
+      max-width: var(--max-width);
+    }
+
+    .contact-inner--centered {
+      text-align: center;
+    }
+
+    .contact-inner--centered .contact-links {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .contact-tagline {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--ink-light);
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover { color: var(--sage); }
+
+    .contact-link-label {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      min-width: 72px;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.03em;
+    }
+
+    /* ---- ANIMATION ---- */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 780px) {
+      .practice-grid {
+        grid-template-columns: 1fr;
+      }
+      .stat-row {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .container { padding: 0 1.5rem; }
+      .page-header { padding: 3.5rem 0 2.5rem; }
+      .page-header h1 { font-size: 1.9rem; }
+      .record-item {
+        grid-template-columns: 72px 1fr;
+        gap: 0.75rem;
+      }
+    }
+
+    /* ---- DARK MODE ---- */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cream: #1e1b18;
+        --ink: #ede8e0;
+        --ink-light: #c2bbb0;
+        --ink-faint: #7a7268;
+        --sage: #8fa08e;
+        --sage-light: #6b7d6a;
+        --sage-pale: #252220;
+        --rule: #38332e;
+      }
+
+      nav { background: rgba(30, 27, 24, 0.92); }
+      .nav-drawer { background: rgba(30, 27, 24, 0.97); }
+
+      .practice-card {
+        background: #252220;
+      }
+
+      .practice-card-wide {
+        background: #252220;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-home" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12c2.5-3 5.5-4.5 10-4.5s7.5 1.5 10 4.5"/>
+        <path d="M2 12c2.5 3 5.5 4.5 10 4.5s7.5-1.5 10-4.5"/>
+        <line x1="12" y1="2" x2="12" y2="22"/>
+        <path d="M4.5 5.5C6.5 7 9 8 12 8s5.5-1 7.5-2.5"/>
+        <path d="M4.5 18.5C6.5 17 9 16 12 16s5.5 1 7.5 2.5"/>
+      </svg>
+    </a>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html">Focus Areas</a></li>
+      <li><a href="/capacity.html">Capacity Building</a></li>
+      <li><a href="/leadership.html" class="active">Leadership</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-drawer" id="nav-drawer">
+      <ul>
+
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html">Focus Areas</a></li>
+      <li><a href="/capacity.html">Capacity Building</a></li>
+      <li><a href="/leadership.html" class="active">Leadership</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Leadership &amp; Advisory</h1>
+      <p class="page-subtitle">Teams, projects &amp; policy</p>
+      <div class="page-intro">
+        <p>Leading teams and coordinating complex partnerships is part 
+and parcel of my research practice. Over the course of my career, I have
+ had the privilege to build and lead several transnational teams with 
+dozens of partners across sectors. One of the most fulfilling aspects of
+ this, for me, is collaborating to puzzle through complex issues and 
+complicated projects while centering care and connection with 
+colleagues.</p>
+        <p>As a beneficiary of taxpayer funded research, being 
+accountable for results is also central to my work. I consistently 
+strive to deliver actionable policy advice for government agencies and 
+stakeholders in the U.S. and Europe.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule">•&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;•</div>
+
+  <!-- PRACTICE AREAS -->
+  <section class="practice-section">
+    <div class="container">
+      <p class="section-label">Areas of practice</p>
+      <div class="practice-grid">
+
+        <!-- 01 WIDE: Research Leadership & Academic Service -->
+        <div class="practice-card-wide">
+          <span class="practice-card-number">01</span>
+          <h3>Research leadership &amp; academic service</h3>
+          <div class="practice-card-desc">
+            <p>Leading international, interdisciplinary teams on 
+European Commission funded research and policy projects — managing 
+across career stages, disciplinary backgrounds, and national contexts. 
+This involves not just assigning tasks and tracking deliverables, but 
+supporting team members to develop professionally, take on progressive 
+responsibilities, and do their best work within complex organizational 
+structures.</p>
+            <p>Contributing to the organizational life of academic and 
+research institutions — convening curriculum reform processes, launching
+ faculty mentoring programs, serving on hiring committees, and 
+facilitating strategic planning. This work reflects a commitment to the 
+idea that good institutions require active cultivation, not just good 
+research output.</p>
+          </div>
+          <div class="practice-card-examples">
+            <span class="practice-card-examples-label">Examples</span>
+            <span class="practice-example">Research Group Leader, 
+Societal Futures, Center for Innovation Systems and Policy, AIT Austrian
+ Institute of Technology. Team of eight scientists and policy advisors 
+spanning six nationalities, multiple career stages, and disciplines. 
+2023–present.</span>
+            <span class="practice-example">Launched and facilitated a 
+peer coaching program for junior faculty and postdocs at ASU's School 
+for the Future of Innovation in Society. The program was later adopted 
+into a campus-wide NSF ADVANCE gender-equity initiative. 2019.</span>
+            <span class="practice-example">Chaired a graduate student 
+curriculum reform committee at ASU's School of Sustainability; co-led 
+joint student-faculty process that resulted in adoption of a new 
+graduate program structure and learning outcomes. 2012–2013.</span>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="practice-card">
+          <span class="practice-card-number">02</span>
+          <h3>Multi-partner project coordination</h3>
+          <p class="practice-card-desc">Coordinating large, 
+multi-organizational research consortia — bringing together research 
+institutes, universities, NGOs, SMEs, and civil society organizations 
+across national and cultural contexts. This work requires active 
+facilitation of cross-partner communication, managing reporting 
+obligations to funders, and sustaining shared mission across 
+organizations with different strengths, working styles, and incentive 
+structures.</p>
+          <div class="practice-card-examples">
+            <span class="practice-card-examples-label">Examples</span>
+            <span class="practice-example">Coordinator, <a href="https://youthdecide2040.eu/" target="_blank" rel="noopener">YouthDecide 2040: Visions of Democracy with and for Future Generations</a>. 11-partner consortium, 8 countries, €4.33M. European Commission Horizon Europe Grant Agreement No. 101177438. 2025–2028.</span>
+            <span class="practice-example">Work Package Leader, <a href="https://re4green.eu/" target="_blank" rel="noopener">RE4GREEN: Research Ethics and Integrity for the Green Transition</a>. European Commission Horizon Europe Grant Agreement No. 101131706. 2024–2027.</span>
+            <span class="practice-example">Work Package Leader, 
+NewHoRRIzon: European Responsible Research and Innovation (Horizon 
+2020). Led synthesis on integrating RRI into European Commission funding
+ policy across four consortium partners. Tromsø, 2018–2022.</span>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="practice-card">
+          <span class="practice-card-number">03</span>
+          <h3>Policy advising &amp; expert consulting</h3>
+          <p class="practice-card-desc">Advising governments, national 
+academies, and international institutions on questions of science and 
+innovation policy. This work spans formal advisory roles within European
+ Commission programs and consulting engagements with U.S. federal 
+agencies — translating research on governance and public engagement into
+ concrete recommendations for policy design and implementation.</p>
+          <div class="practice-card-examples">
+            <span class="practice-card-examples-label">Examples</span>
+            <span class="practice-example">Expert Advisor, Societal 
+Readiness Task Force, European Commission Horizon Europe Cluster 5 
+(Climate, Energy and Mobility), DG RTD. 2023–2024.</span>
+            <span class="practice-example">Consultant, Board on 
+Atmospheric Sciences and Climate, National Academies of Sciences, 
+Engineering, and Medicine (NASEM). Research to inform Committee report 
+on the legacy of the U.S. Global Change Research Program. 2016.</span>
+            <span class="practice-example">Consultant, Climate Change 
+Preparedness Team, White House Council on Environmental Quality (CEQ). 
+Supported the State, Local, and Tribal Leaders Task Force on Climate 
+Preparedness and Resilience; synthesized 150+ community recommendations 
+into a <a href="https://web.archive.org/web/20161212174444/https://www.whitehouse.gov/sites/default/files/docs/task_force_report_0.pdf" target="_blank" rel="noopener">report to the President</a>. 2014.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-rule">•&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;•</div>
+
+  <!-- SCALE STATS -->
+  <section class="scale-section">
+    <div class="container">
+      <p class="section-label">Grant acquisition</p>
+      <p class="scale-body">I have led or been involved in acquiring and
+ managing external funding from competitive European Commission 
+programs, national science agencies, and U.S. government sources. The 
+figures below reflect career totals; projects span topics of democracy, 
+climate and environmental ethics, AI governance, and science and 
+technology policy.</p>
+      <div class="stat-row">
+        <div class="stat-block">
+          <div class="stat-number">€17M+</div>
+          <div class="stat-label">External funding acquired over career</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">€3M+</div>
+          <div class="stat-label">Secured for employing organizations</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">30+</div>
+          <div class="stat-label">Unique partner organizations across projects</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTED PROJECT RECORD -->
+  <section class="record-section">
+    <div class="container">
+      <p class="section-label">Selected project &amp; advisory record</p>
+      <ul class="record-list">
+
+        <li class="record-item">
+          <span class="record-date">2025–2028</span>
+          <span class="record-text"><strong><a href="https://youthdecide2040.eu/" target="_blank" rel="noopener">YouthDecide 2040: Visions of Democracy with and for Future Generations</a></strong>
+ — Project Coordinator. 11-partner Horizon Europe consortium co-creating
+ pathways to preferred futures of EU democracy with and for young 
+people. <em>Grant Agreement No. 101177438 · €4.33M</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2025–2029</span>
+          <span class="record-text"><strong><a href="https://robustifai.eu/concept/" target="_blank" rel="noopener">RobustIfAI: Robustifying Generative AI Through Human-Centric Integration</a></strong>
+ — Senior Investigator. Social science and humanities application of a 
+serious game on ethics and societal impacts of AI foundation models. <em>Horizon Europe Grant Agreement No. 101212818 · €7.7M total</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2024–2027</span>
+          <span class="record-text"><strong><a href="https://re4green.eu/" target="_blank" rel="noopener">RE4GREEN: Research Ethics and Integrity for the Green Transition</a></strong>
+ — Work Package Leader. Developing an ethics and integrity framework to 
+better account for environment and climate considerations in European 
+R&amp;I funding. <em>Horizon Europe Grant Agreement No. 101131706 · €3.2M</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2024–2028</span>
+          <span class="record-text"><strong>RRI Advisers for the Horizon Europe Partnership ERA4Health and M-ERA.NET3</strong>
+ — Co-PI. Supporting the Research Council of Norway in evaluating and 
+advancing responsible research and innovation practices in two European 
+Research Area funding instruments. <em>€90,700</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2023–2025</span>
+          <span class="record-text"><strong><a href="https://3c.cspo.org/" target="_blank" rel="noopener">3C-AZ: Consent-Based Nuclear Waste Siting Evaluation</a></strong>
+ — Component Lead. Supporting the U.S. Department of Energy in surfacing
+ tacit knowledge from a consent-based approach to community engagement 
+on high-level nuclear waste siting. Includes supervision of a PhD 
+student conducting formative evaluation. <em>U.S. Department of Energy</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2023–2024</span>
+          <span class="record-text"><strong>Expert Advisor, Societal Readiness Task Force</strong>
+ — European Commission Directorate-General for Research and Innovation. 
+Advised on design and piloting of the Societal Readiness approach in 
+Horizon Europe Cluster 5 (Climate, Energy and Mobility) funding 
+programs.</span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2018–2022</span>
+          <span class="record-text"><strong>NewHoRRIzon: European Responsible Research and Innovation</strong>
+ — Work Package Leader. Led synthesis of findings on integrating RRI 
+into European Commission policy; recruited and facilitated two 
+transdisciplinary social labs across research, government, and industry.
+ <em>Horizon 2020 Grant Agreement No. 741402</em></span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2016</span>
+          <span class="record-text"><strong>Consultant, Board on Atmospheric Sciences and Climate</strong>
+ — National Academies of Sciences, Engineering, and Medicine (NASEM). 
+Conducted research to inform a Committee report to the U.S. Global 
+Change Research Program on the legacy of program accomplishments.</span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2014</span>
+          <span class="record-text"><strong>Consultant, Climate Change Preparedness Team</strong>
+ — White House Council on Environmental Quality (CEQ). Supported the 
+State, Local, and Tribal Leaders Task Force on Climate Preparedness and 
+Resilience; synthesized 150+ recommendations into seven themes for a <a href="https://web.archive.org/web/20161212174444/https://www.whitehouse.gov/sites/default/files/docs/task_force_report_0.pdf" target="_blank" rel="noopener">report to the President</a>. Responsible for drafting the executive summary, section introductions, synthesis, and appendices.</span>
+        </li>
+
+        <li class="record-item">
+          <span class="record-date">2014</span>
+          <span class="record-text"><strong>Program Evaluation Consultant</strong>
+ — Summer Policy Colloquium, American Meteorological Society (AMS). 
+Conducted summative evaluation of the Society's two-week summer program 
+for graduate students, professors, and practitioners; co-authored report
+ to the Society president.</span>
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-rule">•&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;•</div>
+
+  <!-- CONTACT -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-inner contact-inner--centered">
+        <p class="contact-tagline">Inviting connection about collaborative leadership, policy, and practice.</p>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/michael-bernstein-10ab5517" class="contact-link" target="_blank" rel="noopener">
+            <span class="contact-link-label">LinkedIn</span>Michael J. Bernstein
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <span class="footer-note">michaeljbernstein.info</span>
+  </div>
+</footer>
+
+
+
+
+<script>
+  (function () {
+    var nav = document.querySelector('nav');
+    var btn = document.querySelector('.nav-hamburger');
+    if (!btn) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', nav.classList.contains('open'));
+    });
+
+    // close on drawer link click
+    var drawerLinks = document.querySelectorAll('.nav-drawer a');
+    drawerLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // close on outside click
+    document.addEventListener('click', function () {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  })();
+</script>
+
+</body></html>

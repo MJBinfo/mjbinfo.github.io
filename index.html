@@ -54,19 +54,25 @@
       align-items: center;
       justify-content: center;
       height: 56px;
+      gap: 2rem;
     }
 
-    .nav-name {
-      font-family: 'Lora', serif;
-      font-size: 0.9rem;
-      font-weight: 400;
-      letter-spacing: 0.01em;
-      color: var(--ink-faint);
+    .nav-home {
+      display: flex;
+      align-items: center;
+      color: var(--sage);
       text-decoration: none;
       transition: color 0.2s;
+      flex-shrink: 0;
     }
 
-    .nav-name:hover { color: var(--ink); }
+    .nav-home:hover { color: var(--ink); }
+
+    .nav-home svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
 
     .nav-links {
       display: flex;
@@ -84,7 +90,103 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--sage); }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--sage); }
+
+    /* ---- HAMBURGER ---- */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+      color: var(--ink-light);
+      transition: color 0.2s;
+    }
+
+    .nav-hamburger:hover { color: var(--sage); }
+
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+      transform-origin: center;
+    }
+
+    /* animated X state */
+    nav.open .nav-hamburger span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    nav.open .nav-hamburger span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    nav.open .nav-hamburger span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* mobile drawer */
+    .nav-drawer {
+      display: none;
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background: rgba(245, 240, 232, 0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 1rem 2rem 1.5rem;
+      z-index: 99;
+    }
+
+    nav.open .nav-drawer {
+      display: block;
+      animation: drawerFade 0.2s ease forwards;
+    }
+
+    @keyframes drawerFade {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-drawer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav-drawer ul li a {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.2s;
+    }
+
+    .nav-drawer ul li:last-child a {
+      border-bottom: none;
+    }
+
+    .nav-drawer ul li a:hover,
+    .nav-drawer ul li a.active { color: var(--sage); }
+
+    @media (max-width: 680px) {
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; }
+    }
 
     /* ---- MAIN LAYOUT ---- */
     main {
@@ -245,7 +347,7 @@
 
     .work-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 1px;
       background: var(--rule);
       border: 1px solid var(--rule);
@@ -394,8 +496,40 @@
       .contact-inner {
         gap: 1.25rem;
       }
+    }
+    /* ---- DARK MODE ---- */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cream: #1e1b18;
+        --ink: #ede8e0;
+        --ink-light: #c2bbb0;
+        --ink-faint: #7a7268;
+        --sage: #8fa08e;
+        --sage-light: #6b7d6a;
+        --sage-pale: #252220;
+        --rule: #38332e;
+      }
 
-      .nav-links { display: none; }
+      nav {
+        background: rgba(30, 27, 24, 0.92);
+      }
+
+      .nav-drawer {
+        background: rgba(30, 27, 24, 0.97);
+      }
+
+
+      .hero-image {
+        filter: sepia(8%) contrast(0.95) brightness(0.92);
+      }
+
+      .work-card {
+        background: var(--cream);
+      }
+
+      .work-card:hover {
+        background: #252220;
+      }
     }
   </style>
 </head>
@@ -403,14 +537,38 @@
 
 <nav>
   <div class="nav-inner">
+    <a href="/index.html" class="nav-home" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12c2.5-3 5.5-4.5 10-4.5s7.5 1.5 10 4.5"/>
+        <path d="M2 12c2.5 3 5.5 4.5 10 4.5s7.5-1.5 10-4.5"/>
+        <line x1="12" y1="2" x2="12" y2="22"/>
+        <path d="M4.5 5.5C6.5 7 9 8 12 8s5.5-1 7.5-2.5"/>
+        <path d="M4.5 18.5C6.5 17 9 16 12 16s5.5 1 7.5 2.5"/>
+      </svg>
+    </a>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <ul class="nav-links">
-      <li><a href="/research.html">Research</a></li>
-      <li><a href="/portfolio.html">Portfolio</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html">Focus Areas</a></li>
       <li><a href="/capacity.html">Capacity Building</a></li>
       <li><a href="/leadership.html">Leadership</a></li>
-      <li><a href="/about.html">About</a></li>
       <li><a href="/contact.html">Contact</a></li>
     </ul>
+    <div class="nav-drawer" id="nav-drawer">
+      <ul>
+
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/focus.html">Focus Areas</a></li>
+      <li><a href="/capacity.html">Capacity Building</a></li>
+      <li><a href="/leadership.html">Leadership</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </div>
   </div>
 </nav>
 
@@ -473,15 +631,10 @@
     <div class="container">
       <p class="section-label">Areas of work</p>
       <div class="work-grid">
-        <a href="/research.html" class="work-card">
-          <p class="work-card-label">Research</p>
-          <h3>Innovation governance &amp; science policy</h3>
-          <p>Publications, grants, and policy outputs on R&amp;I systems, responsible technology, and sustainability.</p>
-        </a>
-        <a href="/portfolio.html" class="work-card">
-          <p class="work-card-label">Thematic portfolio</p>
-          <h3>Work across domains &amp; sectors</h3>
-          <p>Crossing topics, bridging sectors, spanning disciplines.</p>
+        <a href="/focus.html" class="work-card">
+          <p class="work-card-label">Focus Areas</p>
+          <h3>Research on science, governance &amp; sustainability</h3>
+          <p>How to design innovation systems for public benefit, build capacity to work on hard sustainability problems, and engage people in the decisions that shape their lives.</p>
         </a>
         <a href="/capacity.html" class="work-card">
           <p class="work-card-label">Capacity Building</p>
@@ -505,9 +658,6 @@
       <div class="contact-inner">
         <p class="contact-tagline">Open to conversations about working together for just and sustainable ways of being on Earth.</p>
         <div class="contact-links">
-          <a href="mailto:michael.bernstein@ait.ac.at" class="contact-link">
-            <span class="contact-link-label">Email</span>michael.bernstein@ait.ac.at
-          </a>
           <a href="https://orcid.org/0000-0001-7980-0489" class="contact-link" target="_blank" rel="noopener">
             <span class="contact-link-label">ORCID</span>0000-0001-7980-0489
           </a>
@@ -529,6 +679,36 @@
     <span class="footer-note">michaeljbernstein.info</span>
   </div>
 </footer>
+
+
+<script>
+  (function () {
+    var nav = document.querySelector('nav');
+    var btn = document.querySelector('.nav-hamburger');
+    if (!btn) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', nav.classList.contains('open'));
+    });
+
+    // close on drawer link click
+    var drawerLinks = document.querySelectorAll('.nav-drawer a');
+    drawerLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // close on outside click
+    document.addEventListener('click', function () {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  })();
+</script>
 
 </body>
 </html>
