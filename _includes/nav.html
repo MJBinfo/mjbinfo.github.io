@@ -1,0 +1,31 @@
+<nav>
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-home" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12c2.5-3 5.5-4.5 10-4.5s7.5 1.5 10 4.5"/>
+        <path d="M2 12c2.5 3 5.5 4.5 10 4.5s7.5-1.5 10-4.5"/>
+        <line x1="12" y1="2" x2="12" y2="22"/>
+        <path d="M4.5 5.5C6.5 7 9 8 12 8s5.5-1 7.5-2.5"/>
+        <path d="M4.5 18.5C6.5 17 9 16 12 16s5.5 1 7.5 2.5"/>
+      </svg>
+    </a>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      {% for item in site.nav %}
+      <li><a href="{{ item.url }}"{% if page.url == item.url %} class="active"{% endif %}>{{ item.label }}</a></li>
+      {% endfor %}
+    </ul>
+    <div class="nav-drawer" id="nav-drawer">
+      <ul>
+        {% for item in site.nav %}
+        <li><a href="{{ item.url }}"{% if page.url == item.url %} class="active"{% endif %}>{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
