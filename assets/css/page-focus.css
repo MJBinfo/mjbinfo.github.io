@@ -1,0 +1,17 @@
+/* ---- FOOTER ---- */
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 1.5rem 0;
+}
+
+footer .container {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 680px) {
+
+  .page-header {
+    padding: 3.5rem 0 2.5rem;
+  }
+}
