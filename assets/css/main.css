@@ -261,6 +261,7 @@ main {
 
 .hero-image {
   width: 100%;
+  height: auto;
   aspect-ratio: 4/5;
   object-fit: cover;
   object-position: center top;
@@ -986,6 +987,7 @@ main {
 
 .photo-wrap img {
   width: 100%;
+  height: auto;
   display: block;
   filter: sepia(6%) contrast(1.02);
 }
@@ -1137,6 +1139,7 @@ main {
 
 .photo-block img {
   width: 100%;
+  height: auto;
   border-radius: 2px;
   display: block;
 }
