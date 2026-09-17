@@ -20,6 +20,18 @@ html {
   scroll-behavior: smooth;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   background: var(--cream);
   color: var(--ink);
@@ -261,6 +273,7 @@ main {
 
 .hero-image {
   width: 100%;
+  height: auto;
   aspect-ratio: 4/5;
   object-fit: cover;
   object-position: center top;
@@ -986,6 +999,7 @@ main {
 
 .photo-wrap img {
   width: 100%;
+  height: auto;
   display: block;
   filter: sepia(6%) contrast(1.02);
 }
@@ -1137,6 +1151,7 @@ main {
 
 .photo-block img {
   width: 100%;
+  height: auto;
   border-radius: 2px;
   display: block;
 }

@@ -1,5 +1,12 @@
 title: Michael J. Bernstein
+description: Researcher, convener, and team leader building capacity for science, technology, and sustainability governance.
+url: "https://michaeljbernstein.info"
 lang: en
+author: Michael J. Bernstein
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 nav:
   - url: /about.html
